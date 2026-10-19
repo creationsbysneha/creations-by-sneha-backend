@@ -41,12 +41,19 @@ function isPrivateDevHost(host: string) {
   return first === 10 || (first === 192 && second === 168) || (first === 172 && second >= 16 && second <= 31);
 }
 
+function isStudioPreviewHost(host: string) {
+  if (host === "creationsbysneha.in" || host === "www.creationsbysneha.in") return true;
+  if (host === "creations-by-sneha-frontend.vercel.app") return true;
+  return host.startsWith("creations-by-sneha-frontend-") && host.endsWith(".vercel.app");
+}
+
 export function isAllowedBrowserOrigin(origin: string | undefined) {
   if (!origin) return true;
   if (allowedOrigins.includes(origin)) return true;
   try {
     const url = new URL(origin);
     if (url.protocol !== "http:" && url.protocol !== "https:") return false;
+    if (url.protocol === "https:" && isStudioPreviewHost(url.hostname)) return true;
     const vitePort = url.port === "5173" || url.port === "4173";
     return vitePort && isPrivateDevHost(url.hostname);
   } catch {

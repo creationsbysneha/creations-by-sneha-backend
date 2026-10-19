@@ -30,6 +30,9 @@ describe("isAllowedBrowserOrigin", () => {
     expect(isAllowedBrowserOrigin("https://creationsbysneha.in")).toBe(true);
     expect(isAllowedBrowserOrigin("http://192.168.1.7:5173")).toBe(true);
     expect(isAllowedBrowserOrigin("http://192.168.1.7:4000")).toBe(false);
+    expect(isAllowedBrowserOrigin("https://creations-by-sneha-frontend.vercel.app")).toBe(true);
+    expect(isAllowedBrowserOrigin("https://creations-by-sneha-frontend-git-main-team.vercel.app")).toBe(true);
+    expect(isAllowedBrowserOrigin("https://evil.vercel.app")).toBe(false);
     expect(isAllowedBrowserOrigin("https://evil.example")).toBe(false);
   });
 });
