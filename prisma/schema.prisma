@@ -1,0 +1,222 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AdminRole {
+  super_admin
+  customer
+
+  @@map("admin_role")
+}
+
+enum ProductCategory {
+  hamper
+  diy
+  gift
+
+  @@map("product_category")
+}
+
+model Admin {
+  id           String             @id @default(uuid())
+  email        String             @unique
+  passwordHash String             @map("password_hash")
+  role         AdminRole          @default(super_admin)
+  createdAt    DateTime           @default(now()) @map("created_at")
+  sessions     Session[]
+  access       InvitationAccess[]
+
+  @@map("admins")
+}
+
+model Session {
+  id        String    @id @default(uuid())
+  adminId   String    @map("admin_id")
+  admin     Admin     @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique @map("token_hash")
+  csrfToken String    @map("csrf_token")
+  expiresAt DateTime  @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@index([adminId])
+  @@map("sessions")
+}
+
+model Invitation {
+  id                String             @id @default(uuid())
+  slug              String             @unique
+  title             String             @default("Untitled invitation")
+  template          String             @default("classic-envelope")
+  status            String             @default("draft")
+  description       String             @default("")
+  brideName         String             @default("") @map("bride_name")
+  brideFull         String             @default("") @map("bride_full")
+  brideParents      String             @default("") @map("bride_parents")
+  brideGrandparents String             @default("") @map("bride_grandparents")
+  groomName         String             @default("") @map("groom_name")
+  groomFull         String             @default("") @map("groom_full")
+  groomParents      String             @default("") @map("groom_parents")
+  groomGrandparents String             @default("") @map("groom_grandparents")
+  families          String             @default("")
+  blessing          String             @default("")
+  complimentOne     String             @default("") @map("compliment_one")
+  complimentTwo     String             @default("") @map("compliment_two")
+  rsvpFamily        String             @default("") @map("rsvp_family")
+  cousinsLabel      String             @default("") @map("cousins_label")
+  cousins           String             @default("")
+  weddingAt         DateTime?          @map("wedding_at")
+  expiresAt         DateTime?          @map("expires_at")
+  venueName         String             @default("") @map("venue_name")
+  venueAddress1     String             @default("") @map("venue_address_1")
+  venueAddress2     String             @default("") @map("venue_address_2")
+  venueNote         String             @default("") @map("venue_note")
+  mapEmbed          String             @default("") @map("map_embed")
+  directionsUrl     String             @default("") @map("directions_url")
+  rsvpMode          String             @default("disabled") @map("rsvp_mode")
+  isDemo            Boolean            @default(false) @map("is_demo")
+  theme             Json
+  guessOptions      Json               @default("[]") @map("guess_options")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+  publishedAt       DateTime?          @map("published_at")
+  publishedVersion  Int                @default(0) @map("published_version")
+  publishedSlug     String?            @map("published_slug")
+  publishedKey      String?            @map("published_key")
+  events            CeremonyEvent[]
+  mediaLinks        InvitationMedia[]
+  access            InvitationAccess[]
+
+  @@map("invitations")
+}
+
+model InvitationAccess {
+  id           String     @id @default(uuid())
+  adminId      String     @map("admin_id")
+  invitationId String     @map("invitation_id")
+  admin        Admin      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now()) @map("created_at")
+
+  @@unique([adminId, invitationId])
+  @@map("invitation_access")
+}
+
+model CeremonyEvent {
+  id           String     @id @default(uuid())
+  invitationId String     @map("invitation_id")
+  invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  sortOrder    Int        @map("sort_order")
+  title        String     @default("")
+  subtitle     String     @default("")
+  dateLabel    String     @default("") @map("date_label")
+  venue        String     @default("")
+  description  String     @default("")
+  imageAlt     String     @default("") @map("image_alt")
+  details      Json
+  mediaId      String?    @map("media_id")
+  media        Media?     @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+
+  @@index([invitationId, sortOrder])
+  @@map("events")
+}
+
+model Media {
+  id                String            @id @default(uuid())
+  storageKey        String            @unique @map("storage_key")
+  mimeType          String            @map("mime_type")
+  width             Int
+  height            Int
+  byteSize          Int               @map("byte_size")
+  status            String            @default("ready")
+  ownerInvitationId String?           @map("owner_invitation_id")
+  purpose           String            @default("")
+  checksum          String?
+  createdAt         DateTime          @default(now()) @map("created_at")
+  links             InvitationMedia[]
+  events            CeremonyEvent[]
+  productImages     ProductImage[]
+
+  @@index([status, createdAt])
+  @@index([ownerInvitationId])
+  @@map("media")
+}
+
+model InvitationPublication {
+  id           String    @id @default(uuid())
+  invitationId String    @map("invitation_id")
+  slug         String
+  version      Int
+  objectKey    String    @map("object_key")
+  mediaIds     Json      @default("[]") @map("media_ids")
+  assetKeys    Json      @default("[]") @map("asset_keys")
+  snapshot     Json
+  state        String    @default("active")
+  actor        String    @default("")
+  publishedAt  DateTime  @default(now()) @map("published_at")
+  withdrawnAt  DateTime? @map("withdrawn_at")
+
+  @@unique([invitationId, version])
+  @@index([state])
+  @@map("invitation_publications")
+}
+
+model InvitationMedia {
+  id           String     @id @default(uuid())
+  invitationId String     @map("invitation_id")
+  mediaId      String     @map("media_id")
+  invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  media        Media      @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+  role         String
+  sortOrder    Int        @default(0) @map("sort_order")
+  alt          String     @default("")
+
+  @@index([invitationId, role, sortOrder])
+  @@map("invitation_media")
+}
+
+model Product {
+  id          String          @id @default(uuid())
+  category    ProductCategory
+  heading     String
+  description String          @default("")
+  price       Decimal?        @db.Decimal(10, 2)
+  published   Boolean         @default(false)
+  sortOrder   Int             @default(0) @map("sort_order")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+  images      ProductImage[]
+
+  @@index([category, sortOrder])
+  @@map("products")
+}
+
+model ProductImage {
+  id        String  @id @default(uuid())
+  productId String  @map("product_id")
+  mediaId   String  @map("media_id")
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  media     Media   @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+  sortOrder Int     @default(0) @map("sort_order")
+  alt       String  @default("")
+
+  @@index([productId, sortOrder])
+  @@map("product_images")
+}
+
+model AuditLog {
+  id     String   @id @default(uuid())
+  at     DateTime @default(now())
+  action String
+  actor  String
+  ok     Boolean
+  detail String   @default("")
+
+  @@index([at])
+  @@map("audit_logs")
+}

@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "kind": "creations-by-sneha.invitation",
+  "slug": "saanvi-and-kabir",
+  "template": "classic-envelope",
+  "version": 1,
+  "publishedAt": "2026-10-18T12:00:00.000Z",
+  "generatedAt": "2026-10-18T12:00:00.000Z",
+  "seo": {
+    "title": "Saanvi & Kabir",
+    "description": "A sample digital wedding invitation for Saanvi and Kabir.",
+    "image": "https://assets.creationsbysneha.in/media/a1208fc5-d3ae-4b86-aeba-0b08d5e8d1a4/7ca8c8375b89ee77.webp",
+    "noindex": true
+  },
+  "content": {
+    "badge": "",
+    "title": "Saanvi & Kabir | Sample Wedding Invitation",
+    "description": "A sample digital wedding invitation for Saanvi and Kabir.",
+    "blessing": "",
+    "rsvpMode": "local-demo",
+    "theme": {
+      "accent": "gold",
+      "paper": "cream",
+      "script": "great-vibes"
+    },
+    "couple": {
+      "brideFirst": "S",
+      "brideRest": "aanvi",
+      "brideName": "Saanvi",
+      "brideFull": "Saanvi Malhotra",
+      "brideParents": "Daughter of Smt. Nandini & Shri Vikram Malhotra",
+      "brideGrandparents": "Granddaughter of Smt. Lata & Shri Devendra Malhotra",
+      "groomFirst": "K",
+      "groomRest": "abir",
+      "groomName": "Kabir",
+      "groomFull": "Kabir Sethi",
+      "groomParents": "Son of Smt. Pooja & Shri Rohan Sethi",
+      "groomGrandparents": "Grandson of Smt. Savitri & Shri Harish Sethi",
+      "pair": "Saanvi & Kabir",
+      "monogram": "S & K",
+      "families": "The Malhotra & Sethi families",
+      "compliments": [
+        "Smt. Nandini Malhotra",
+        "Shri Vikram Malhotra"
+      ],
+      "rsvpFamily": "Malhotra Family",
+      "cousinsLabel": "The Sethi cousins",
+      "cousins": "Kunal Sethi, Neel Sethi, Riya Sethi & Aditya Sethi"
+    },
+    "date": {
+      "iso": "2027-02-11T18:30:00.000Z",
+      "day": "12",
+      "suffix": "th",
+      "monthYear": "February 2027",
+      "weekday": "Friday",
+      "footer": "12th February 2027 • Friday • The Amber Pavilion"
+    },
+    "venue": {
+      "name": "The Amber Pavilion",
+      "addressLine1": "Amber Road",
+      "addressLine2": "Jaipur",
+      "note": "Illustrative venue for this sample invitation",
+      "mapEmbed": "https://www.google.com/maps?output=embed&q=Amber%20Fort%2C%20Jaipur%2C%20Rajasthan",
+      "directionsUrl": "https://www.google.com/maps/search/?api=1&query=Amber%20Fort%20Jaipur"
+    },
+    "images": {
+      "envelope": "https://assets.creationsbysneha.in/media/0f7ba82c-1625-47cd-8e72-78ef3b20a55d/44391163bc62c223.webp",
+      "hero": "https://assets.creationsbysneha.in/media/a1208fc5-d3ae-4b86-aeba-0b08d5e8d1a4/7ca8c8375b89ee77.webp",
+      "venue": "https://assets.creationsbysneha.in/media/b6f54aeb-9ef6-4458-9771-7c5baaab7036/bc6087fa777b8ef9.webp",
+      "og": "https://assets.creationsbysneha.in/media/a1208fc5-d3ae-4b86-aeba-0b08d5e8d1a4/7ca8c8375b89ee77.webp",
+      "fallback": "https://creationsbysneha.in/demo/fallback.jpg"
+    },
+    "gallery": [
+      {
+        "src": "https://assets.creationsbysneha.in/media/5fa4c442-380f-4694-95b0-2cf5c4fdcb37/ed12ed693c1966b1.webp",
+        "alt": "Gallery photograph 1"
+      },
+      {
+        "src": "https://assets.creationsbysneha.in/media/a49a888b-9bcc-43a0-9766-78d2f0db4148/ce1df9eb326ce905.webp",
+        "alt": "Gallery photograph 2"
+      },
+      {
+        "src": "https://assets.creationsbysneha.in/media/337d4f67-b511-4696-a33a-ce0b1be2b514/6aaed3dcb9d8c5d5.webp",
+        "alt": "Gallery photograph 3"
+      }
+    ],
+    "ceremonies": [
+      {
+        "roman": "Ceremony I",
+        "title": "Parampara & Pratishtha",
+        "subtitle": "Lagun & Shiv Vivah",
+        "date": "Monday, 8th February 2027",
+        "venue": "The Malhotra residence",
+        "icon": "",
+        "image": "https://assets.creationsbysneha.in/media/72328203-884f-4f5c-825e-e83d67eec544/5d3f7786ee024ac0.webp",
+        "imageAlt": "Bride and groom holding hands under a floral mandap",
+        "events": [
+          {
+            "time": "2:00 PM onwards"
+          }
+        ]
+      },
+      {
+        "roman": "Ceremony II",
+        "title": "Bheegi Palken",
+        "subtitle": "From celebration to farewell",
+        "date": "Saturday, 13th February 2027",
+        "venue": "The Malhotra residence",
+        "icon": "",
+        "image": "https://creationsbysneha.in/demo/fallback.jpg",
+        "imageAlt": "Bheegi Palken",
+        "events": [
+          {
+            "time": "Early morning",
+            "label": "Vidaai"
+          }
+        ]
+      }
+    ],
+    "guessOptions": [
+      {
+        "id": "S",
+        "label": "Saanvi"
+      },
+      {
+        "id": "K",
+        "label": "Kabir"
+      },
+      {
+        "id": "B",
+        "label": "Both"
+      }
+    ]
+  },
+  "assets": [
+    {
+      "mediaId": "a1208fc5-d3ae-4b86-aeba-0b08d5e8d1a4",
+      "url": "https://assets.creationsbysneha.in/media/a1208fc5-d3ae-4b86-aeba-0b08d5e8d1a4/7ca8c8375b89ee77.webp",
+      "width": 1600,
+      "height": 1067
+    },
+    {
+      "mediaId": "0f7ba82c-1625-47cd-8e72-78ef3b20a55d",
+      "url": "https://assets.creationsbysneha.in/media/0f7ba82c-1625-47cd-8e72-78ef3b20a55d/44391163bc62c223.webp",
+      "width": 1600,
+      "height": 1067
+    },
+    {
+      "mediaId": "b6f54aeb-9ef6-4458-9771-7c5baaab7036",
+      "url": "https://assets.creationsbysneha.in/media/b6f54aeb-9ef6-4458-9771-7c5baaab7036/bc6087fa777b8ef9.webp",
+      "width": 1600,
+      "height": 1067
+    },
+    {
+      "mediaId": "5fa4c442-380f-4694-95b0-2cf5c4fdcb37",
+      "url": "https://assets.creationsbysneha.in/media/5fa4c442-380f-4694-95b0-2cf5c4fdcb37/ed12ed693c1966b1.webp",
+      "width": 1600,
+      "height": 1067
+    },
+    {
+      "mediaId": "a49a888b-9bcc-43a0-9766-78d2f0db4148",
+      "url": "https://assets.creationsbysneha.in/media/a49a888b-9bcc-43a0-9766-78d2f0db4148/ce1df9eb326ce905.webp",
+      "width": 1600,
+      "height": 1067
+    },
+    {
+      "mediaId": "337d4f67-b511-4696-a33a-ce0b1be2b514",
+      "url": "https://assets.creationsbysneha.in/media/337d4f67-b511-4696-a33a-ce0b1be2b514/6aaed3dcb9d8c5d5.webp",
+      "width": 1600,
+      "height": 1067
+    },
+    {
+      "mediaId": "72328203-884f-4f5c-825e-e83d67eec544",
+      "url": "https://assets.creationsbysneha.in/media/72328203-884f-4f5c-825e-e83d67eec544/5d3f7786ee024ac0.webp",
+      "width": 1600,
+      "height": 1067
+    }
+  ]
+}

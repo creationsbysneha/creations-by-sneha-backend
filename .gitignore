@@ -147,3 +147,9 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Uploaded invitation photographs
+storage/
+
+# Local JSON stand-in for the database, including the admin password
+data/

@@ -1,0 +1,7 @@
+---
+description: Backend security rules
+globs:
+  - "**/*"
+---
+
+Do not add a public registration route or a default password. Draft invitations and their photographs stay off public routes. Deleting an invitation must not remove a photograph that another invitation still references.
