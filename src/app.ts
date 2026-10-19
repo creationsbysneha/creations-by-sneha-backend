@@ -9,7 +9,7 @@ import path from "node:path";
 import sharp from "sharp";
 import type { Prisma, PrismaClient } from "@prisma/client";
 import { ZodError } from "zod";
-import { config, fallbackImageUrl, isAllowedBrowserOrigin } from "./config.js";
+import { config, fallbackImageUrl, isAllowedBrowserOrigin, sessionCookieOptions } from "./config.js";
 import { prisma as defaultPrisma } from "./db.js";
 import { requestLogging } from "./httpLogging.js";
 import { CACHE, privateMediaKey } from "./keys.js";
@@ -93,14 +93,8 @@ function assertSuperAdmin(session: StudioSession) {
   }
 }
 
-function cookieOptions() {
-  return {
-    httpOnly: true,
-    sameSite: "lax" as const,
-    secure: config.cookieSecure,
-    path: "/",
-    maxAge: config.sessionTtlHours * 60 * 60 * 1000,
-  };
+function cookieOptions(req: Request) {
+  return sessionCookieOptions(req.get("origin"), req.hostname);
 }
 
 function looksLikeImage(buffer: Buffer, mime: string) {
@@ -292,7 +286,7 @@ export function createApp(deps: AppDeps = {}) {
       });
       await addLog(prisma, { action: "login", actor: admin.email, ok: true, detail: "Signed in" });
       if (config.logging.authEvents) logInfo("AUTH", "login_success", { userId: admin.id, role: admin.role });
-      res.cookie("cbs_session", token, cookieOptions());
+      res.cookie("cbs_session", token, cookieOptions(req));
       res.json({ email: admin.email, role: admin.role, csrfToken });
     } catch (error) {
       next(error);
@@ -304,13 +298,13 @@ export function createApp(deps: AppDeps = {}) {
     res.json({ email: session.admin.email, role: session.admin.role, csrfToken: session.csrfToken });
   });
 
-  app.post("/api/auth/logout", requireAdmin, async (_req, res, next) => {
+  app.post("/api/auth/logout", requireAdmin, async (req, res, next) => {
     try {
       const session = res.locals.session as StudioSession;
       await prisma.session.update({ where: { id: session.id }, data: { revokedAt: new Date() } });
       await addLog(prisma, { action: "logout", actor: session.admin.email, ok: true, detail: "Signed out" });
       if (config.logging.authEvents) logInfo("AUTH", "logout", { userId: session.admin.id });
-      res.clearCookie("cbs_session", { path: "/", sameSite: "lax", secure: config.cookieSecure, httpOnly: true });
+      res.clearCookie("cbs_session", cookieOptions(req));
       res.json({ ok: true });
     } catch (error) {
       next(error);

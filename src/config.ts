@@ -18,7 +18,7 @@ export const config = {
   storageDriver: process.env.STORAGE_DRIVER || "local",
   storageDir: process.env.STORAGE_DIR || "storage",
   dataFile: process.env.DATA_FILE || "data/store.json",
-  trustProxy: process.env.TRUST_PROXY === "true",
+  trustProxy: envFlag("TRUST_PROXY", isProduction),
   cleanupGraceHours: Number(process.env.STORAGE_CLEANUP_GRACE_HOURS || 48),
   cloudflareZoneId: process.env.CLOUDFLARE_ZONE_ID || "",
   cloudflareApiToken: process.env.CLOUDFLARE_API_TOKEN || "",
@@ -53,6 +53,33 @@ export function isAllowedBrowserOrigin(origin: string | undefined) {
   } catch {
     return false;
   }
+}
+
+export function cookieSiteKey(host: string) {
+  const hostname = host.trim().toLowerCase().replace(/^\[|\]$/g, "");
+  if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") return "localhost";
+  const parts = hostname.split(".").filter(Boolean);
+  if (parts.length < 2) return hostname;
+  return parts.slice(-2).join(".");
+}
+
+export function sessionCookieOptions(originHeader: string | undefined, apiHost: string) {
+  let crossSite = false;
+  if (originHeader) {
+    try {
+      crossSite = cookieSiteKey(new URL(originHeader).hostname) !== cookieSiteKey(apiHost);
+    } catch {
+      crossSite = true;
+    }
+  }
+  return {
+    httpOnly: true as const,
+    path: "/",
+    maxAge: config.sessionTtlHours * 60 * 60 * 1000,
+    sameSite: (crossSite ? "none" : "lax") as "none" | "lax",
+    secure: config.cookieSecure || crossSite,
+    ...(crossSite ? { partitioned: true } : {}),
+  };
 }
 
 export const publicSiteUrl = (process.env.PUBLIC_SITE_URL || allowedOrigins[0] || "http://localhost:5173").replace(/\/$/, "");
