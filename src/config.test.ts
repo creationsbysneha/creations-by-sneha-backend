@@ -32,3 +32,25 @@ describe("isAllowedBrowserOrigin", () => {
   });
 });
 
+describe("trust proxy and session cookies", () => {
+  it("trusts the proxy in production unless TRUST_PROXY is false", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("TRUST_PROXY", "");
+    expect((await import("./config.js")).config.trustProxy).toBe(true);
+    vi.resetModules();
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("TRUST_PROXY", "false");
+    expect((await import("./config.js")).config.trustProxy).toBe(false);
+  });
+
+  it("uses SameSite=None on a different site so the browser will send the session", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    const { sessionCookieOptions } = await import("./config.js");
+    const cross = sessionCookieOptions("http://localhost:5173", "creations-by-sneha-backend.onrender.com");
+    expect(cross).toMatchObject({ sameSite: "none", secure: true, partitioned: true, httpOnly: true });
+    const same = sessionCookieOptions("https://creationsbysneha.in", "api.creationsbysneha.in");
+    expect(same).toMatchObject({ sameSite: "lax", secure: true });
+    expect(same).not.toHaveProperty("partitioned");
+  });
+});
+
