@@ -23,12 +23,14 @@ describe("isAllowedBrowserOrigin", () => {
     expect(isAllowedBrowserOrigin("http://192.168.1.7:4000")).toBe(false);
   });
 
-  it("rejects LAN origins in production", async () => {
+  it("still allows a phone on Wi-Fi to open the Vite app against the live API", async () => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("FRONTEND_ORIGIN", "https://creationsbysneha.in");
     const { isAllowedBrowserOrigin } = await import("./config.js");
     expect(isAllowedBrowserOrigin("https://creationsbysneha.in")).toBe(true);
-    expect(isAllowedBrowserOrigin("http://192.168.1.7:5173")).toBe(false);
+    expect(isAllowedBrowserOrigin("http://192.168.1.7:5173")).toBe(true);
+    expect(isAllowedBrowserOrigin("http://192.168.1.7:4000")).toBe(false);
+    expect(isAllowedBrowserOrigin("https://evil.example")).toBe(false);
   });
 });
 
