@@ -4,8 +4,14 @@ import { r2Settings } from "./storage.js";
 
 const settings = r2Settings();
 const origins = [
-  ...(process.env.FRONTEND_ORIGIN || "").split(","),
-  ...(process.env.PUBLIC_SITE_ORIGINS || "https://creationsbysneha.in,https://www.creationsbysneha.in").split(","),
+  ...(process.env.FRONTEND_ORIGIN || "http://localhost:5173").split(","),
+  ...(process.env.PUBLIC_SITE_ORIGINS ||
+    [
+      "https://creationsbysneha.in",
+      "https://www.creationsbysneha.in",
+      "https://creations-by-sneha-frontend.vercel.app",
+      "https://*.vercel.app",
+    ].join(",")).split(","),
 ]
   .map((origin) => origin.trim())
   .filter(Boolean);

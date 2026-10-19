@@ -44,11 +44,10 @@ function isPrivateDevHost(host: string) {
 export function isAllowedBrowserOrigin(origin: string | undefined) {
   if (!origin) return true;
   if (allowedOrigins.includes(origin)) return true;
-  if (isProduction) return false;
   try {
     const url = new URL(origin);
     if (url.protocol !== "http:" && url.protocol !== "https:") return false;
-    const vitePort = url.port === "" || url.port === "5173" || url.port === "4173";
+    const vitePort = url.port === "5173" || url.port === "4173";
     return vitePort && isPrivateDevHost(url.hostname);
   } catch {
     return false;
