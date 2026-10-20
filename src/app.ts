@@ -425,6 +425,7 @@ export function createApp(deps: AppDeps = {}) {
             slug: isDemo ? await unusedDemoSlug() : `draft-${newSecret().slice(0, 8)}`,
             isDemo,
             theme: body.theme || defaultTheme,
+            rsvpMode: "local-demo",
             guessOptions: [
               { id: "A", label: "Partner one" },
               { id: "B", label: "Partner two" },
