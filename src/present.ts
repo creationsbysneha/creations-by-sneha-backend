@@ -81,6 +81,7 @@ export function presentContent(invitation: InvitationGraph, options: { badge: st
       subtitle: event.subtitle,
       date: event.dateLabel,
       venue: event.venue,
+      description: event.description || undefined,
       icon: "",
       image: image(event.mediaId) || fallback,
       imageAlt: event.imageAlt || event.title,
