@@ -1,4 +1,3 @@
-import { config } from "./config.js";
 import { formatWeddingDate, romanFor, splitName, toExpiryInput, toWeddingInput } from "./security.js";
 import { hasUnpublishedChanges, type InvitationGraph } from "./store.js";
 
@@ -6,7 +5,7 @@ export type { InvitationGraph };
 
 export type ImageResolver = (mediaId: string | null | undefined) => string;
 
-export const draftImage: ImageResolver = (id) => (id ? `${config.publicApiUrl}/api/media/${id}` : "");
+export const draftImage: ImageResolver = (id) => (id ? `/api/media/${id}` : "");
 
 function linkFor(invitation: InvitationGraph, role: string) {
   return invitation.mediaLinks.find((link) => link.role === role) || null;
