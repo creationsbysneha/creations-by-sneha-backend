@@ -662,7 +662,7 @@ export function createApp(deps: AppDeps = {}) {
         await addLog(prisma, { action: "image.upload", actor: session.admin.email, ok: true, detail: `${invitationId} ${role}` });
         logInfo("MEDIA", "uploaded", { invitationId, mediaId: pending.id, role });
         await publisher.releaseMedia(replaced, session.admin.email);
-        res.status(201).json({ mediaId: pending.id, url: `${config.publicApiUrl}/api/media/${pending.id}` });
+        res.status(201).json({ mediaId: pending.id, url: `/api/media/${pending.id}` });
       } catch (error) {
         if (stored) await storage.private.delete(storageKey).catch(() => undefined);
         await prisma.media.deleteMany({ where: { id: pending.id, status: "pending" } }).catch(() => undefined);
