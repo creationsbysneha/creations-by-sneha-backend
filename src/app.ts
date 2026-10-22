@@ -73,6 +73,7 @@ const TEXT_FIELDS = [
   "mapEmbed",
   "directionsUrl",
   "rsvpMode",
+  "albumMode",
 ] as const;
 
 function assertInvitation(session: StudioSession, action: InvitationAction, invitationId?: string) {

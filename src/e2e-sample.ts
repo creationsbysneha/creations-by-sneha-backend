@@ -121,6 +121,7 @@ const fields = {
   mapEmbed: "https://www.google.com/maps?output=embed&q=Amber%20Fort%2C%20Jaipur%2C%20Rajasthan",
   directionsUrl: "https://www.google.com/maps/search/?api=1&query=Amber%20Fort%20Jaipur",
   rsvpMode: "local-demo",
+  albumMode: "sample",
   isDemo: true,
   theme: { accent: "gold", paper: "cream", script: "great-vibes" },
   guessOptions: [

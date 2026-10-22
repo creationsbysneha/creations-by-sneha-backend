@@ -79,6 +79,7 @@ model Invitation {
   mapEmbed          String             @default("") @map("map_embed")
   directionsUrl     String             @default("") @map("directions_url")
   rsvpMode          String             @default("disabled") @map("rsvp_mode")
+  albumMode         String             @default("sample") @map("album_mode")
   isDemo            Boolean            @default(false) @map("is_demo")
   theme             Json
   guessOptions      Json               @default("[]") @map("guess_options")

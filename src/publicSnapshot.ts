@@ -20,6 +20,7 @@ const contentSchema = z
     description: text,
     blessing: text,
     rsvpMode: z.enum(["local-demo", "disabled"]),
+    albumMode: z.enum(["sample", "disabled"]),
     theme: z
       .object({
         accent: z.enum(["gold", "rose", "olive"]),
@@ -69,6 +70,7 @@ const contentSchema = z
             subtitle: text,
             date: text,
             venue: text,
+            description: text.optional(),
             icon: text,
             image: absoluteUrl,
             imageAlt: text,
