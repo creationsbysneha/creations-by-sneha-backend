@@ -47,6 +47,7 @@ export type InvitationFields = {
   mapEmbed: string;
   directionsUrl: string;
   rsvpMode: string;
+  albumMode: string;
   isDemo: boolean;
   theme: unknown;
   guessOptions: unknown;

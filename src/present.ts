@@ -34,6 +34,7 @@ export function presentContent(invitation: InvitationGraph, options: { badge: st
     description: invitation.description,
     blessing: invitation.blessing,
     rsvpMode: invitation.rsvpMode as "local-demo" | "disabled",
+    albumMode: (invitation.albumMode === "disabled" ? "disabled" : "sample") as "sample" | "disabled",
     theme,
     couple: {
       brideFirst: bride.first,
@@ -130,6 +131,7 @@ export function presentInvitation(invitation: InvitationGraph, options: { badge:
     mapEmbed: invitation.mapEmbed,
     directionsUrl: invitation.directionsUrl,
     rsvpMode: invitation.rsvpMode,
+    albumMode: invitation.albumMode === "disabled" ? "disabled" : "sample",
     theme,
     guessOptions,
     ceremonies: invitation.events.map((event) => ({

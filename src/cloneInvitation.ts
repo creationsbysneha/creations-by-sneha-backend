@@ -72,6 +72,7 @@ export async function cloneInvitation(
       mapEmbed: source.mapEmbed,
       directionsUrl: source.directionsUrl,
       rsvpMode: source.rsvpMode,
+      albumMode: source.albumMode,
       isDemo: options.isDemo,
       theme: options.theme || source.theme || { accent: "gold", paper: "cream", script: "great-vibes" },
       guessOptions: source.guessOptions as object,
