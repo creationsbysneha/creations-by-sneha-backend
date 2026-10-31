@@ -13,7 +13,7 @@ export const config = {
   databaseUrl: process.env.DATABASE_URL || "",
   frontendOrigin: process.env.FRONTEND_ORIGIN || "http://localhost:5173",
   publicApiUrl: (process.env.API_PUBLIC_URL || "http://localhost:4000").replace(/\/$/, ""),
-  sessionTtlHours: Number(process.env.SESSION_TTL_HOURS || 12),
+  sessionTtlHours: Number(process.env.SESSION_TTL_HOURS || 168),
   cookieSecure: isProduction,
   storageDriver: process.env.STORAGE_DRIVER || "local",
   storageDir: process.env.STORAGE_DIR || "storage",
@@ -73,7 +73,10 @@ export function sessionCookieOptions(originHeader: string | undefined, apiHost: 
   let crossSite = false;
   if (originHeader) {
     try {
-      crossSite = cookieSiteKey(new URL(originHeader).hostname) !== cookieSiteKey(apiHost);
+      const originHost = new URL(originHeader).hostname;
+      // In development a phone reaches the API through the Vite proxy, so the browser sees one site even though the hosts differ.
+      const devProxy = !isProduction && isPrivateDevHost(originHost) && isPrivateDevHost(apiHost);
+      crossSite = !devProxy && cookieSiteKey(originHost) !== cookieSiteKey(apiHost);
     } catch {
       crossSite = true;
     }
