@@ -57,5 +57,13 @@ describe("trust proxy and session cookies", () => {
     expect(same).toMatchObject({ sameSite: "lax", secure: true });
     expect(same).not.toHaveProperty("partitioned");
   });
+
+  it("keeps a plain Lax cookie for a phone on Wi-Fi using the Vite proxy in development", async () => {
+    vi.stubEnv("NODE_ENV", "development");
+    const { sessionCookieOptions } = await import("./config.js");
+    const phone = sessionCookieOptions("http://192.168.1.7:5173", "127.0.0.1");
+    expect(phone).toMatchObject({ sameSite: "lax", secure: false });
+    expect(phone).not.toHaveProperty("partitioned");
+  });
 });
 

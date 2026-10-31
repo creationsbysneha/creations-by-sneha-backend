@@ -15,7 +15,7 @@ Copy `.env.example` to `.env`. Put the Neon connection string in `DATABASE_URL`.
 
 Studio logins are stored in Neon. There is no public registration. Add another studio login with `npm run admin:create` if you need one. That command reads `ADMIN_EMAIL` and `ADMIN_PASSWORD`. The password must be at least 12 characters and include a letter and a number. The command refuses to replace an existing administrator.
 
-The API listens on port 4000. Sessions last `SESSION_TTL_HOURS` (12 by default), use an HttpOnly `SameSite=Lax` cookie, and require the `X-CSRF-Token` returned by login on every change. `FRONTEND_ORIGIN` is the only browser origin allowed to send credentials.
+The API listens on port 4000. Sessions last `SESSION_TTL_HOURS` (168, one week, by default), use an HttpOnly `SameSite=Lax` cookie, and require the `X-CSRF-Token` returned by login on every change. `FRONTEND_ORIGIN` is the only browser origin allowed to send credentials.
 
 ## Logging
 
