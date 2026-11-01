@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { SLUG_PATTERN } from "./security.js";
 
+/* Invitation designs. "classic-envelope" is the original; every existing invitation keeps it. */
+export const TEMPLATES = ["classic-envelope", "royal-wedding"] as const;
+export const templateSchema = z.enum(TEMPLATES);
+
 export const themeSchema = z.object({
   accent: z.enum(["gold", "rose", "olive"]),
   paper: z.enum(["cream", "ivory", "blush"]),
@@ -44,6 +48,11 @@ export const updateSchema = z
     rsvpFamily: z.string().max(120).optional(),
     cousinsLabel: z.string().max(120).optional(),
     cousins: z.string().max(240).optional(),
+    introOpening: z.string().max(160).optional(),
+    introRequest: z.string().max(160).optional(),
+    introOccasion: z.string().max(160).optional(),
+    introClosing: z.string().max(160).optional(),
+    template: templateSchema.optional(),
     weddingAt: z.string().max(40).optional(),
     expiresAt: z.string().max(40).optional(),
     venueName: z.string().max(140).optional(),
@@ -90,4 +99,13 @@ export const createInvitationSchema = z.object({
   cloneId: z.string().uuid().optional(),
   slug: z.string().regex(SLUG_PATTERN, "Use lowercase letters, numbers, and hyphens.").max(80).optional(),
   theme: themeSchema.optional(),
+  template: templateSchema.optional(),
 });
+
+/* Suggested opening words for a new Royal Wedding invitation. Stored as ordinary, editable text. */
+export const royalIntroDefaults = {
+  introOpening: "Together with their families",
+  introRequest: "request the pleasure of your company",
+  introOccasion: "at the celebration of their wedding",
+  introClosing: "We cordially invite you to celebrate with us",
+};

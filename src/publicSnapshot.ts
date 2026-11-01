@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { presentContent, type InvitationGraph } from "./present.js";
 import { SLUG_PATTERN } from "./security.js";
+import { TEMPLATES } from "./validate.js";
 
 export const SNAPSHOT_SCHEMA_VERSION = 1;
 export const SNAPSHOT_KIND = "creations-by-sneha.invitation";
@@ -82,6 +83,7 @@ const contentSchema = z
       )
       .max(12),
     guessOptions: z.array(z.object({ id: z.string().max(8), label: z.string().max(40) }).strict()).max(6),
+    intro: z.object({ opening: text, request: text, occasion: text, closing: text }).strict().optional(),
   })
   .strict();
 
@@ -90,7 +92,7 @@ export const snapshotSchema = z
     schemaVersion: z.literal(SNAPSHOT_SCHEMA_VERSION),
     kind: z.literal(SNAPSHOT_KIND),
     slug: z.string().regex(SLUG_PATTERN).max(120),
-    template: z.literal("classic-envelope"),
+    template: z.enum(TEMPLATES),
     version: z.number().int().positive(),
     publishedAt: z.string().datetime(),
     generatedAt: z.string().datetime(),
@@ -124,7 +126,7 @@ export function buildSnapshot(
     schemaVersion: SNAPSHOT_SCHEMA_VERSION,
     kind: SNAPSHOT_KIND,
     slug: graph.slug,
-    template: "classic-envelope" as const,
+    template: graph.template === "royal-wedding" ? ("royal-wedding" as const) : ("classic-envelope" as const),
     version: options.version,
     publishedAt: iso,
     generatedAt: iso,
