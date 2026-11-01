@@ -38,6 +38,10 @@ export type InvitationFields = {
   rsvpFamily: string;
   cousinsLabel: string;
   cousins: string;
+  introOpening: string;
+  introRequest: string;
+  introOccasion: string;
+  introClosing: string;
   weddingAt: Date | null;
   expiresAt: Date | null;
   venueName: string;

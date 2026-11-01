@@ -3,17 +3,29 @@ import type { PrismaClient } from "@prisma/client";
 import { CACHE, privateMediaKey } from "./keys.js";
 import { referencedMediaIds, type InvitationGraph } from "./store.js";
 import type { ObjectStorage } from "./storage.js";
-import type { themeSchema } from "./validate.js";
+import { royalIntroDefaults, type templateSchema, type themeSchema } from "./validate.js";
 import type { z } from "zod";
 
 type Theme = z.infer<typeof themeSchema>;
+type Template = z.infer<typeof templateSchema>;
 
 export async function cloneInvitation(
   prisma: PrismaClient,
   storage: ObjectStorage,
   source: InvitationGraph,
-  options: { slug: string; isDemo: boolean; theme?: Theme },
+  options: { slug: string; isDemo: boolean; theme?: Theme; template?: Template },
 ) {
+  const template = options.template || source.template;
+  // A copy made into the Royal design starts with suggested opening words wherever the source has none.
+  const intro = {
+    introOpening: source.introOpening,
+    introRequest: source.introRequest,
+    introOccasion: source.introOccasion,
+    introClosing: source.introClosing,
+  };
+  if (template === "royal-wedding") {
+    for (const key of Object.keys(intro) as Array<keyof typeof intro>) intro[key] ||= royalIntroDefaults[key];
+  }
   const mediaIds = referencedMediaIds(source);
   const copied = new Map<string, string>();
 
@@ -45,7 +57,7 @@ export async function cloneInvitation(
     data: {
       slug: options.slug,
       title: source.title,
-      template: source.template,
+      template,
       status: "draft",
       description: source.description,
       brideName: source.brideName,
@@ -63,6 +75,7 @@ export async function cloneInvitation(
       rsvpFamily: source.rsvpFamily,
       cousinsLabel: source.cousinsLabel,
       cousins: source.cousins,
+      ...intro,
       weddingAt: source.weddingAt,
       expiresAt: source.expiresAt,
       venueName: source.venueName,

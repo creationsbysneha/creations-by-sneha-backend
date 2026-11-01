@@ -23,7 +23,7 @@ import { csrfMatches, familyLoginEmail, hashSecret, invitationAccess, newSecret,
 import { createStorage, type ObjectStorage } from "./storage.js";
 import { addLog, loadGraph, referencedMediaIds } from "./store.js";
 import { runCleanup } from "./cleanup.js";
-import { accessSchema, cleanupSchema, createCustomerSchema, createInvitationSchema, defaultTheme, loginSchema, updateSchema } from "./validate.js";
+import { accessSchema, cleanupSchema, createCustomerSchema, createInvitationSchema, defaultTheme, loginSchema, royalIntroDefaults, updateSchema } from "./validate.js";
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -66,6 +66,10 @@ const TEXT_FIELDS = [
   "rsvpFamily",
   "cousinsLabel",
   "cousins",
+  "introOpening",
+  "introRequest",
+  "introOccasion",
+  "introClosing",
   "venueName",
   "venueAddress1",
   "venueAddress2",
@@ -361,6 +365,7 @@ export function createApp(deps: AppDeps = {}) {
           status: true,
           isDemo: true,
           theme: true,
+          template: true,
           updatedAt: true,
           publishedAt: true,
           publishedVersion: true,
@@ -386,6 +391,7 @@ export function createApp(deps: AppDeps = {}) {
             status: item.status,
             isDemo: item.isDemo,
             theme,
+            template: item.template,
             couple: pair,
             coverUrl: cover?.mediaId ? `/api/media/${cover.mediaId}` : "",
             updatedAt: item.updatedAt.toISOString(),
@@ -418,7 +424,7 @@ export function createApp(deps: AppDeps = {}) {
           select: { id: true },
         });
         if (taken) throw new HttpError(409, "That public link is already in use.");
-        const cloned = await cloneInvitation(prisma, storage, source, { slug, isDemo: isDemo || source.isDemo, theme: body.theme });
+        const cloned = await cloneInvitation(prisma, storage, source, { slug, isDemo: isDemo || source.isDemo, theme: body.theme, template: body.template });
         createdId = cloned.id;
       } else {
         const created = await prisma.invitation.create({
@@ -426,6 +432,7 @@ export function createApp(deps: AppDeps = {}) {
             slug: isDemo ? await unusedDemoSlug() : `draft-${newSecret().slice(0, 8)}`,
             isDemo,
             theme: body.theme || defaultTheme,
+            ...(body.template === "royal-wedding" ? { template: body.template, ...royalIntroDefaults } : {}),
             rsvpMode: "local-demo",
             guessOptions: [
               { id: "A", label: "Partner one" },
@@ -478,6 +485,8 @@ export function createApp(deps: AppDeps = {}) {
           if (input[field] !== undefined) (data as Record<string, unknown>)[field] = input[field];
         }
         if (input.theme !== undefined) data.theme = input.theme;
+        // Only the studio changes an invitation's design.
+        if (studio && input.template !== undefined) data.template = input.template;
         if (studio && input.isDemo !== undefined) data.isDemo = input.isDemo;
         if (input.guessOptions !== undefined) data.guessOptions = input.guessOptions;
         if (input.weddingAt !== undefined) {

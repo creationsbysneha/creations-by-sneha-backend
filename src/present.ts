@@ -90,6 +90,16 @@ export function presentContent(invitation: InvitationGraph, options: { badge: st
       events: (Array.isArray(event.details) ? event.details : []) as Array<{ time: string; label?: string; dressCode?: string }>,
     })),
     guessOptions,
+    ...(invitation.template === "royal-wedding"
+      ? {
+          intro: {
+            opening: invitation.introOpening,
+            request: invitation.introRequest,
+            occasion: invitation.introOccasion,
+            closing: invitation.introClosing,
+          },
+        }
+      : {}),
   };
 }
 
@@ -122,6 +132,11 @@ export function presentInvitation(invitation: InvitationGraph, options: { badge:
     rsvpFamily: invitation.rsvpFamily,
     cousinsLabel: invitation.cousinsLabel,
     cousins: invitation.cousins,
+    introOpening: invitation.introOpening,
+    introRequest: invitation.introRequest,
+    introOccasion: invitation.introOccasion,
+    introClosing: invitation.introClosing,
+    template: invitation.template === "royal-wedding" ? "royal-wedding" : "classic-envelope",
     weddingAt: toWeddingInput(invitation.weddingAt),
     expiresAt: toExpiryInput(invitation.expiresAt),
     venueName: invitation.venueName,
@@ -160,6 +175,7 @@ export function presentInvitation(invitation: InvitationGraph, options: { badge:
     id: invitation.id,
     status: invitation.status,
     isDemo: invitation.isDemo,
+    template: form.template,
     updatedAt: invitation.updatedAt.toISOString(),
     publishedAt: invitation.publishedAt?.toISOString() || null,
     expiresAt: invitation.expiresAt?.toISOString() || null,

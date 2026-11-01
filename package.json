@@ -17,7 +17,8 @@
     "db:import-json": "tsx src/import-json.ts",
     "r2:check": "tsx src/r2-check.ts",
     "r2:cors": "tsx src/r2-cors.ts",
-    "storage:cleanup": "tsx src/cleanup-cli.ts"
+    "storage:cleanup": "tsx src/cleanup-cli.ts",
+    "demo:royal": "tsx src/seed-royal-demo.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",
