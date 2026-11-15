@@ -2,7 +2,7 @@ import { z } from "zod";
 import { SLUG_PATTERN } from "./security.js";
 
 /* Invitation designs. "classic-envelope" is the original; every existing invitation keeps it. */
-export const TEMPLATES = ["classic-envelope", "royal-wedding"] as const;
+export const TEMPLATES = ["classic-envelope", "royal-wedding", "shubh-aarambh"] as const;
 export const templateSchema = z.enum(TEMPLATES);
 
 export const themeSchema = z.object({
@@ -53,6 +53,13 @@ export const updateSchema = z
     introOccasion: z.string().max(160).optional(),
     introClosing: z.string().max(160).optional(),
     template: templateSchema.optional(),
+    nameOrder: z.enum(["bride-first", "groom-first"]).optional(),
+    brideBio: z.string().max(240).optional(),
+    groomBio: z.string().max(240).optional(),
+    invocation: z.string().max(160).optional(),
+    rsvpPhone: z.string().max(24).regex(/^[+\d\s()-]*$/, "Use digits, spaces and + only.").optional(),
+    brideMediaId: z.string().uuid().nullable().optional(),
+    groomMediaId: z.string().uuid().nullable().optional(),
     weddingAt: z.string().max(40).optional(),
     expiresAt: z.string().max(40).optional(),
     venueName: z.string().max(140).optional(),
@@ -109,3 +116,19 @@ export const royalIntroDefaults = {
   introOccasion: "at the celebration of their wedding",
   introClosing: "We cordially invite you to celebrate with us",
 };
+
+/* Suggested words for a new Shubh Aarambh invitation. Plain data the studio edits or clears. */
+export const shubhDefaults = {
+  introOpening: "With the blessings of our elders",
+  introRequest: "joyfully invite you to the wedding of",
+  introOccasion: "and seek your presence and blessings",
+  introClosing: "Your presence will make our celebration complete",
+  invocation: "॥ श्री गणेशाय नमः ॥",
+};
+
+/* The starting words each design brings to a new invitation. */
+export function designDefaults(template: string | undefined): Record<string, string> {
+  if (template === "royal-wedding") return royalIntroDefaults;
+  if (template === "shubh-aarambh") return shubhDefaults;
+  return {};
+}

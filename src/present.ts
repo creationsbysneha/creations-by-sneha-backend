@@ -1,5 +1,6 @@
 import { formatWeddingDate, romanFor, splitName, toExpiryInput, toWeddingInput } from "./security.js";
 import { hasUnpublishedChanges, type InvitationGraph } from "./store.js";
+import { TEMPLATES } from "./validate.js";
 
 export type { InvitationGraph };
 
@@ -90,13 +91,26 @@ export function presentContent(invitation: InvitationGraph, options: { badge: st
       events: (Array.isArray(event.details) ? event.details : []) as Array<{ time: string; label?: string; dressCode?: string }>,
     })),
     guessOptions,
-    ...(invitation.template === "royal-wedding"
+    // Opening words are carried only by the designs that show them, so classic snapshots stay as they were.
+    ...(invitation.template === "royal-wedding" || invitation.template === "shubh-aarambh"
       ? {
           intro: {
             opening: invitation.introOpening,
             request: invitation.introRequest,
             occasion: invitation.introOccasion,
             closing: invitation.introClosing,
+          },
+        }
+      : {}),
+    // Shubh Aarambh alone tells the couple's story: who comes first, the invocation, each of them, and who to call.
+    ...(invitation.template === "shubh-aarambh"
+      ? {
+          story: {
+            order: (invitation.nameOrder === "groom-first" ? "groom-first" : "bride-first") as "bride-first" | "groom-first",
+            invocation: invitation.invocation,
+            bride: { photo: image(linkFor(invitation, "bride")?.mediaId), bio: invitation.brideBio },
+            groom: { photo: image(linkFor(invitation, "groom")?.mediaId), bio: invitation.groomBio },
+            rsvpPhone: invitation.rsvpPhone,
           },
         }
       : {}),
@@ -136,7 +150,16 @@ export function presentInvitation(invitation: InvitationGraph, options: { badge:
     introRequest: invitation.introRequest,
     introOccasion: invitation.introOccasion,
     introClosing: invitation.introClosing,
-    template: invitation.template === "royal-wedding" ? "royal-wedding" : "classic-envelope",
+    nameOrder: invitation.nameOrder === "groom-first" ? "groom-first" : "bride-first",
+    brideBio: invitation.brideBio,
+    groomBio: invitation.groomBio,
+    invocation: invitation.invocation,
+    rsvpPhone: invitation.rsvpPhone,
+    brideMediaId: linkFor(invitation, "bride")?.mediaId || null,
+    brideUrl: draftImage(linkFor(invitation, "bride")?.mediaId),
+    groomMediaId: linkFor(invitation, "groom")?.mediaId || null,
+    groomUrl: draftImage(linkFor(invitation, "groom")?.mediaId),
+    template: (TEMPLATES as readonly string[]).includes(invitation.template) ? (invitation.template as (typeof TEMPLATES)[number]) : "classic-envelope",
     weddingAt: toWeddingInput(invitation.weddingAt),
     expiresAt: toExpiryInput(invitation.expiresAt),
     venueName: invitation.venueName,

@@ -42,6 +42,11 @@ export type InvitationFields = {
   introRequest: string;
   introOccasion: string;
   introClosing: string;
+  nameOrder: string;
+  brideBio: string;
+  groomBio: string;
+  invocation: string;
+  rsvpPhone: string;
   weddingAt: Date | null;
   expiresAt: Date | null;
   venueName: string;

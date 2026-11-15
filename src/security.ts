@@ -14,13 +14,15 @@ export function nextDemoSlug(existing: string[]) {
 
 export const FAMILY_EMAIL_DOMAIN = "creationsbysneha.in";
 
-/* The public link of the Royal Wedding demo. */
+/* The public links of the design demos. */
 export const ROYAL_DEMO_SLUG = "demo-royal";
+export const SHUBH_DEMO_SLUG = "demo-shubh";
+const DEMO_SLUGS = new Set(["demo", ROYAL_DEMO_SLUG, SHUBH_DEMO_SLUG]);
 
-export const RESERVED_SLUGS = new Set(["admin", "login", "demo", "invite", "images", "brand", ROYAL_DEMO_SLUG]);
+export const RESERVED_SLUGS = new Set(["admin", "login", "invite", "images", "brand", ...DEMO_SLUGS]);
 
 export function slugReserved(slug: string, isDemo = false) {
-  if (isDemo && (slug === "demo" || slug === ROYAL_DEMO_SLUG)) return false;
+  if (isDemo && DEMO_SLUGS.has(slug)) return false;
   return RESERVED_SLUGS.has(slug);
 }
 

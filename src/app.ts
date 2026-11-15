@@ -23,7 +23,7 @@ import { csrfMatches, familyLoginEmail, hashSecret, invitationAccess, newSecret,
 import { createStorage, type ObjectStorage } from "./storage.js";
 import { addLog, loadGraph, referencedMediaIds } from "./store.js";
 import { runCleanup } from "./cleanup.js";
-import { accessSchema, cleanupSchema, createCustomerSchema, createInvitationSchema, defaultTheme, loginSchema, royalIntroDefaults, updateSchema } from "./validate.js";
+import { accessSchema, cleanupSchema, createCustomerSchema, createInvitationSchema, defaultTheme, designDefaults, loginSchema, updateSchema } from "./validate.js";
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -46,7 +46,7 @@ type StudioSession = {
   admin: { id: string; email: string; role: AccountRole; invitationIds: string[] };
 };
 
-const MEDIA_ROLES = ["hero", "envelope", "venue", "gallery", "ceremony"] as const;
+const MEDIA_ROLES = ["hero", "envelope", "venue", "gallery", "ceremony", "bride", "groom"] as const;
 
 const TEXT_FIELDS = [
   "title",
@@ -70,6 +70,11 @@ const TEXT_FIELDS = [
   "introRequest",
   "introOccasion",
   "introClosing",
+  "nameOrder",
+  "brideBio",
+  "groomBio",
+  "invocation",
+  "rsvpPhone",
   "venueName",
   "venueAddress1",
   "venueAddress2",
@@ -432,7 +437,7 @@ export function createApp(deps: AppDeps = {}) {
             slug: isDemo ? await unusedDemoSlug() : `draft-${newSecret().slice(0, 8)}`,
             isDemo,
             theme: body.theme || defaultTheme,
-            ...(body.template === "royal-wedding" ? { template: body.template, ...royalIntroDefaults } : {}),
+            ...(body.template && body.template !== "classic-envelope" ? { template: body.template, ...designDefaults(body.template) } : {}),
             rsvpMode: "local-demo",
             guessOptions: [
               { id: "A", label: "Partner one" },
@@ -509,6 +514,8 @@ export function createApp(deps: AppDeps = {}) {
         await replaceRole(tx, invitationId, "hero", input.heroMediaId);
         await replaceRole(tx, invitationId, "envelope", input.envelopeMediaId);
         await replaceRole(tx, invitationId, "venue", input.venueMediaId);
+        await replaceRole(tx, invitationId, "bride", input.brideMediaId);
+        await replaceRole(tx, invitationId, "groom", input.groomMediaId);
         if (input.gallery) {
           await tx.invitationMedia.deleteMany({ where: { invitationId, role: "gallery" } });
           for (const [index, photo] of input.gallery.entries()) {
