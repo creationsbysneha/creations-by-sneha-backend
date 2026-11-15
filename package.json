@@ -18,7 +18,8 @@
     "r2:check": "tsx src/r2-check.ts",
     "r2:cors": "tsx src/r2-cors.ts",
     "storage:cleanup": "tsx src/cleanup-cli.ts",
-    "demo:royal": "tsx src/seed-royal-demo.ts"
+    "demo:royal": "tsx src/seed-royal-demo.ts",
+    "demo:shubh": "tsx src/seed-shubh-demo.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",

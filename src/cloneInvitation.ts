@@ -3,7 +3,7 @@ import type { PrismaClient } from "@prisma/client";
 import { CACHE, privateMediaKey } from "./keys.js";
 import { referencedMediaIds, type InvitationGraph } from "./store.js";
 import type { ObjectStorage } from "./storage.js";
-import { royalIntroDefaults, type templateSchema, type themeSchema } from "./validate.js";
+import { designDefaults, type templateSchema, type themeSchema } from "./validate.js";
 import type { z } from "zod";
 
 type Theme = z.infer<typeof themeSchema>;
@@ -16,16 +16,15 @@ export async function cloneInvitation(
   options: { slug: string; isDemo: boolean; theme?: Theme; template?: Template },
 ) {
   const template = options.template || source.template;
-  // A copy made into the Royal design starts with suggested opening words wherever the source has none.
-  const intro = {
+  // A copy made into another design starts with that design's suggested words wherever the source has none.
+  const intro: Record<string, string> = {
     introOpening: source.introOpening,
     introRequest: source.introRequest,
     introOccasion: source.introOccasion,
     introClosing: source.introClosing,
+    invocation: source.invocation,
   };
-  if (template === "royal-wedding") {
-    for (const key of Object.keys(intro) as Array<keyof typeof intro>) intro[key] ||= royalIntroDefaults[key];
-  }
+  for (const [key, text] of Object.entries(designDefaults(template))) intro[key] ||= text;
   const mediaIds = referencedMediaIds(source);
   const copied = new Map<string, string>();
 
@@ -76,6 +75,10 @@ export async function cloneInvitation(
       cousinsLabel: source.cousinsLabel,
       cousins: source.cousins,
       ...intro,
+      nameOrder: source.nameOrder,
+      brideBio: source.brideBio,
+      groomBio: source.groomBio,
+      rsvpPhone: source.rsvpPhone,
       weddingAt: source.weddingAt,
       expiresAt: source.expiresAt,
       venueName: source.venueName,

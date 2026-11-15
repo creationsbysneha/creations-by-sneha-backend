@@ -71,5 +71,7 @@ describe("demo public links", () => {
     expect(slugReserved("admin", true)).toBe(true);
     expect(slugReserved("demo-royal")).toBe(true);
     expect(slugReserved("demo-royal", true)).toBe(false);
+    expect(slugReserved("demo-shubh")).toBe(true);
+    expect(slugReserved("demo-shubh", true)).toBe(false);
   });
 });

@@ -84,6 +84,16 @@ const contentSchema = z
       .max(12),
     guessOptions: z.array(z.object({ id: z.string().max(8), label: z.string().max(40) }).strict()).max(6),
     intro: z.object({ opening: text, request: text, occasion: text, closing: text }).strict().optional(),
+    story: z
+      .object({
+        order: z.enum(["bride-first", "groom-first"]),
+        invocation: text,
+        bride: z.object({ photo: z.union([absoluteUrl, z.literal("")]), bio: text }).strict(),
+        groom: z.object({ photo: z.union([absoluteUrl, z.literal("")]), bio: text }).strict(),
+        rsvpPhone: text,
+      })
+      .strict()
+      .optional(),
   })
   .strict();
 
@@ -126,7 +136,7 @@ export function buildSnapshot(
     schemaVersion: SNAPSHOT_SCHEMA_VERSION,
     kind: SNAPSHOT_KIND,
     slug: graph.slug,
-    template: graph.template === "royal-wedding" ? ("royal-wedding" as const) : ("classic-envelope" as const),
+    template: (TEMPLATES as readonly string[]).includes(graph.template) ? (graph.template as (typeof TEMPLATES)[number]) : ("classic-envelope" as const),
     version: options.version,
     publishedAt: iso,
     generatedAt: iso,
